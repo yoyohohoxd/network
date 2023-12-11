@@ -1,5 +1,13 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    <div class="container">
+    {% if user.is_authenticated %}
+        <form action="{% url 'index' %}" method="post">
+            <div class="form-group">
+                <div>{{ NewPostForm }}</div>
+            </div>
+        </form>
+    {% endif %}
+    </div>
 {% endblock %}

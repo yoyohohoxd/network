@@ -6,9 +6,18 @@ from django.urls import reverse
 
 from .models import User
 
+#import all ModelForm
+from .forms import *
 
 def index(request):
-    return render(request, "network/index.html")
+
+    if request.method == "POST":
+        pass
+    else:
+        f = NewPostForm()
+        return render(request, "network/index.html", {
+            "NewPostForm": f
+        })
 
 
 def login_view(request):
