@@ -1,13 +1,29 @@
 {% extends "network/layout.html" %}
+{% load crispy_forms_tags %}
 
 {% block body %}
     <div class="container">
     {% if user.is_authenticated %}
+        <h1>Welcome to your page</h1>
         <form action="{% url 'index' %}" method="post">
             <div class="form-group">
-                <div>{{ NewPostForm }}</div>
+                {% crispy NewPostForm %}
+                <input type="submit" value="Post" class="btn btn-primary mb-2">
             </div>
         </form>
+        <div class="container">
+            {% for post in all_posts %}
+                <div class="card mx-auto w-75 mb-5" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="cartd-title">{{ post.user }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ post.date }}</h6>
+                        <p class="card-text border p-2">{{ post.post_text }}</p>
+                        <a href="#" class="card-link">Like</a>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
     {% endif %}
     </div>
 {% endblock %}

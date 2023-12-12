@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import *
 
 #import all ModelForm
 from .forms import *
@@ -12,11 +12,20 @@ from .forms import *
 def index(request):
 
     if request.method == "POST":
-        pass
+        f = NewPostForm(request.POST)
+        if f.is_valid():
+            instance = f.save(commit=False)
+            instance.user = request.user
+            instance.save()
+        return(HttpResponseRedirect(reverse("index")))
     else:
+
+        all_posts = NewPost.objects.all().order_by('date')
+
         f = NewPostForm()
         return render(request, "network/index.html", {
-            "NewPostForm": f
+            "NewPostForm": f,
+            "all_posts": all_posts
         })
 
 
