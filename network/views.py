@@ -20,7 +20,9 @@ def index(request):
         return(HttpResponseRedirect(reverse("index")))
     else:
 
-        all_posts = NewPost.objects.all().order_by('date')
+        all_posts = NewPost.objects.order_by('-date')
+
+        print(type(all_posts), ' - ', all_posts)
 
         f = NewPostForm()
         return render(request, "network/index.html", {
