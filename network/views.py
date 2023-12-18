@@ -19,11 +19,7 @@ def index(request):
             instance.save()
         return(HttpResponseRedirect(reverse("index")))
     else:
-
-        all_posts = NewPost.objects.order_by('-date')
-
-        print(type(all_posts), ' - ', all_posts)
-
+        all_posts = NewPost.objects.order_by("-date")
         f = NewPostForm()
         return render(request, "network/index.html", {
             "NewPostForm": f,
@@ -81,3 +77,17 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+def profile(request, profile_username):
+
+    # Gets currently logged in user
+    user = request.user
+    
+    # Gets visited profile
+    profile = User.objects.get(username=profile_username)
+
+    posts = NewPost.objects.filter(user_id=profile.id).order_by("-date")
+
+    return render(request, "network/profile.html", {
+        'posts': posts
+    })

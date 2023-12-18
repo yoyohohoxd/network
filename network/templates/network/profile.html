@@ -1,0 +1,35 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="container">
+        {% if user.is_authenticated %}
+
+            <!-- Display profile and relevant information in a wide card -->
+            <div class="my-5 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.username }}</h5>
+                    <p class="card-text" class="text-muted"> Followers: </p>
+                </div>
+            </div>
+
+            
+
+            <!-- Display posts from user -->
+            <div class="container">
+                {% for post in posts %}
+                    <div class="card mx-auto w-75 mb-3" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="cartd-title">{{ post.user }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ post.date }}</h6>
+                            <p class="card-text border p-2">{{ post.post_text }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+        {% else %}
+            <div>You're currently not loggeed in. <a href="{% url 'login' %}">Login</a></div>
+        {% endif %}
+    </div>
+{% endblock %}
