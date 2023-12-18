@@ -89,5 +89,6 @@ def profile(request, profile_username):
     posts = NewPost.objects.filter(user_id=profile.id).order_by("-date")
 
     return render(request, "network/profile.html", {
-        'posts': posts
+        'posts': posts,
+        'profile': profile
     })

@@ -9,6 +9,12 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ user.username }}</h5>
                     <p class="card-text" class="text-muted"> Followers: </p>
+                    {% if user.id != profile.id %}
+                        <form action="{% url 'index' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Follow</button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
 
