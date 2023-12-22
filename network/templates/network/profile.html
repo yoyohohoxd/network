@@ -7,10 +7,18 @@
             <!-- Display profile and relevant information in a wide card -->
             <div class="my-5 text-center">
                 <div class="card-body">
-                    <h5 class="card-title">{{ user.username }}</h5>
-                    <p class="card-text" class="text-muted"> Followers: </p>
+
+                    <!-- If user is not the same as the profile -->
                     {% if user.id != profile.id %}
-                        <form action="{% url 'index' %}" method="post">
+                        <h5 class="card-title">{{ profile }}</h5>
+                    {% else %}
+                        <h5 class="card-title">This is your page, welcome!</h5>
+                    {% endif %}
+                    <p class="card-text" class="text-muted"> Followers: </p>
+
+                    <!-- If user is not the same as the profile -->
+                    {% if user.id != profile.id %}
+                        <form action="{% url 'profile' profile %}" method="post">
                             {% csrf_token %}
                             <button type="submit">Follow</button>
                         </form>

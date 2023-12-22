@@ -15,7 +15,7 @@
             {% for post in all_posts %}
                 <div class="card mx-auto w-75 mb-5" style="width: 18rem;">
                     <div class="card-body">
-                        <h5 class="cartd-title">{{ post.user }}</h5>
+                        <h5 class="card-title"><a href="{% url 'profile' post.user %}" class="text-reset text-decoration-none">{{ post.user }}</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ post.date }}</h6>
                         <p class="card-text border p-2">{{ post.post_text }}</p>
                         <a href="#" class="card-link">Like</a>

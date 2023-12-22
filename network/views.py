@@ -69,6 +69,10 @@ def register(request):
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
+
+            profile = Profile.objects.create(user_id=user.id)
+            profile.save()
+
         except IntegrityError:
             return render(request, "network/register.html", {
                 "message": "Username already taken."
@@ -84,11 +88,19 @@ def profile(request, profile_username):
     user = request.user
     
     # Gets visited profile
-    profile = User.objects.get(username=profile_username)
+    visited_profile = User.objects.get(username=profile_username)
 
-    posts = NewPost.objects.filter(user_id=profile.id).order_by("-date")
+    # Gets posts and returns them in reverse order (oldest first)
+    posts = NewPost.objects.filter(user_id=visited_profile.id).order_by("-date")
+
+    # Follow functionality
+    if request.method == "POST":
+        profile = Profile.objects.get(user_id=visited_profile.id)
+        my_profile = Profile.objects.get(user_id=user.id)
+        
+        profile.follows.add(my_profile)
 
     return render(request, "network/profile.html", {
         'posts': posts,
-        'profile': profile
+        'profile': visited_profile
     })
