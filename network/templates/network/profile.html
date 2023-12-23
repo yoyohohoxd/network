@@ -20,6 +20,7 @@
                     {% if user.id != profile.id %}
                         <form action="{% url 'profile' profile %}" method="post">
                             {% csrf_token %}
+                            
                             <button type="submit">Follow</button>
                         </form>
                     {% endif %}
