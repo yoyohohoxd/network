@@ -93,14 +93,32 @@ def profile(request, profile_username):
     # Gets posts and returns them in reverse order (oldest first)
     posts = NewPost.objects.filter(user_id=visited_profile.id).order_by("-date")
 
+    profile = Profile.objects.get(user_id=visited_profile.id)
+    my_profile = Profile.objects.get(user_id=user.id)
+
     # Follow functionality
     if request.method == "POST":
-        profile = Profile.objects.get(user_id=visited_profile.id)
-        my_profile = Profile.objects.get(user_id=user.id)
-        
-        profile.follows.add(my_profile)
+
+        # Check if 'profile' already is followed by 'my_profile'. If already following, remove, else add.
+        if profile.followed_by.filter(id=my_profile.id).exists():
+            profile.followed_by.remove(my_profile)
+        else:
+            profile.followed_by.add(my_profile)
+
+        return HttpResponseRedirect(reverse("profile", args=(profile_username,)))
+
+    # Using this bool to determine whether a user is following the visited profile
+    following_bool = profile.followed_by.filter(id=my_profile.id).exists()
+
+    # Counting number of followers
+    followers_no = profile.followed_by.all().count()
 
     return render(request, "network/profile.html", {
         'posts': posts,
-        'profile': visited_profile
+        'profile': visited_profile,
+        'following_bool': following_bool,
+        'followers_no': followers_no
     })
+
+def following(request):
+    return render(request, "network/following.html")
