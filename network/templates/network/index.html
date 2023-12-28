@@ -4,7 +4,7 @@
 {% block body %}
     <div class="container">
     {% if user.is_authenticated %}
-        <h1>Welcome to your page</h1>
+        <h1 class="my-5 text-center">Welcome {{ user.username }}</h1>
         <form action="{% url 'index' %}" method="post">
             <div class="form-group">
                 {% crispy NewPostForm %}
@@ -12,7 +12,7 @@
             </div>
         </form>
         <div class="container">
-            {% for post in all_posts %}
+            {% for post in page_obj %}
                 <div class="card mx-auto w-75 mb-5" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title"><a href="{% url 'profile' post.user %}" class="text-reset text-decoration-none">{{ post.user }}</a></h5>
@@ -23,6 +23,53 @@
                 </div>
             {% endfor %}
         </div>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a href="?page=1" class="page-link" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                
+                <!-- Loops over pages passed through the paginator constructor. |add:'1' so loop doesn't start at 0. -->
+                {% for page in num_pages %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page|add:'1' }}">{{ page|add:"1" }}</a></li>
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+
+        </nav>
+
+        <!-- Paginator from Django's design documents - COMMENTED OUT
+        <div class="paginator">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page.obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        -->
     {% endif %}
     </div>
 {% endblock %}

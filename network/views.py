@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from django.core.paginator import Paginator
+
 from .models import *
 
 #import all ModelForm
@@ -21,9 +23,16 @@ def index(request):
     else:
         all_posts = NewPost.objects.order_by("-date")
         f = NewPostForm()
+
+        # Paginator
+        paginator = Paginator(all_posts, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
         return render(request, "network/index.html", {
             "NewPostForm": f,
-            "all_posts": all_posts
+            "page_obj": page_obj,
+            "num_pages": range(paginator.num_pages)
         })
 
 
@@ -121,4 +130,18 @@ def profile(request, profile_username):
     })
 
 def following(request):
-    return render(request, "network/following.html")
+
+    # Get current profile
+    current_profile = Profile.objects.get(id=request.user.id)
+
+    # Get followed users
+    followed_users = Profile.objects.filter(followed_by=current_profile)
+
+    # Empty QuerySet receives all relevant posts
+    p = NewPost.objects.none()
+    for user in followed_users:
+        p = p | NewPost.objects.filter(user_id=user.id).order_by("-date")
+
+    return render(request, "network/following.html", {
+        "posts": p
+    })
