@@ -18,12 +18,17 @@
                         <h5 class="card-title"><a href="{% url 'profile' post.user %}" class="text-reset text-decoration-none">{{ post.user }}</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ post.date }}</h6>
                         <p class="card-text border p-2">{{ post.post_text }}</p>
-                        <a href="#" class="card-link">Like</a>
+                        <button type="button" class="btn btn-primary btn-sm">Like</button>
+                        {% if post.user == user %}
+                            <button type="button" class="btn btn-primary btn-sm" id="edit">Edit</button>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
         </div>
 
+
+        <!-- Paginator -->
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
@@ -51,25 +56,6 @@
 
         </nav>
 
-        <!-- Paginator from Django's design documents - COMMENTED OUT
-        <div class="paginator">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page.obj.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-        
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
-        -->
     {% endif %}
     </div>
 {% endblock %}

@@ -95,7 +95,7 @@ def profile(request, profile_username):
 
     # Gets currently logged in user
     user = request.user
-    
+
     # Gets visited profile
     visited_profile = User.objects.get(username=profile_username)
 
