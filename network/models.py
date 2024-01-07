@@ -12,6 +12,7 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     follows = models.ManyToManyField("self", related_name="followed_by", symmetrical=False, blank=True)
+    likes = models.ManyToManyField("NewPost", related_name="liked_by", symmetrical=False, null=True, blank=True)
 
 
 class NewPost(models.Model):

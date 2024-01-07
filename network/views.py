@@ -156,4 +156,20 @@ def savepost(request, id):
         post.post_text = data["post_text"]
         post.save()
         return HttpResponse(status=204)
-        
+
+@csrf_exempt
+def likepost(request, id):
+    print('likepost_func')
+    post = NewPost.objects.get(id=id)
+    user = request.user
+    profile = Profile.objects.get(id=user.id)
+    if request.method == 'POST':
+        if profile.likes.filter(id=post.id).exists():
+            print('removing like')
+            post.liked_by.remove(profile)
+            return JsonResponse({"message": "Post was unliked succesfully"}, status=201)
+        else:
+            print('adding like')
+            post.liked_by.add(profile)
+            return JsonResponse({"message": "Post was liked succesfully"}, status=201)
+

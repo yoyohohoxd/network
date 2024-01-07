@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
         post.querySelector('#save').style.display = 'none';
         post.querySelector('#edit-post').style.display = 'none';
 
+        // Add like functionality to all like buttons
+        post.querySelector('#like').addEventListener('click', () => {
+            like(post);
+        })
+
         // If edit button exists, addEventListener for both Edit and Save button
         const editButton = post.querySelector('#edit');
         if (editButton) {
@@ -13,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             post.querySelector('#save').addEventListener('click', () => {
                 save(post);
             })
+
         }
     });
 });
@@ -54,4 +60,17 @@ function save(post) {
             post_text: editTextarea.value
         })
     })
-};
+}
+
+function like(post) {
+    console.log('Liking');
+    // Get ID from post to fetch operation
+    const postID = post.id.slice(5);
+
+    likeButton = post.querySelector('#edit');
+
+    fetch(`likepost/${postID}/`, {
+        method: 'POST'
+        // have to send stuff back like amount of likes and whether or not it is liked at all
+    })
+}
