@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
     <div class="container">
@@ -33,18 +34,28 @@
             
             <!-- Display posts from user -->
             <div class="container">
-            <div class="mx-auto w-75 mb-3" style="width: 18rem;">
-                <h5 class="card-title">{{ profile }}'s recent posts:</h5>
-            </div>
-                {% for post in posts %}
-                    <div class="card mx-auto w-75 mb-3" style="width: 18rem;">
-                        <div class="card-body">
-                            <h5 class="cartd-title">{{ post.user }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ post.date }}</h6>
-                            <p class="card-text border p-2">{{ post.post_text }}</p>
+                <div class="mx-auto w-75 mb-3" style="width: 18rem;">
+                    <h5 class="card-title">{{ profile }}'s recent posts:</h5>
+                </div>
+                <div class="container">
+                    {% for post in posts %}
+                        <div class="card mx-auto w-75 mb-5" style="width: 18rem;">
+                            <div class="card-body posts" id="post-{{ post.id }}">
+                                <h5 class="card-title"><a href="{% url 'profile' post.user %}" class="text-reset text-decoration-none">{{ post.user }}</a></h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ post.date }}</h6>
+                                <p class="card-text border p-2" id="post-text">{{ post.post_text }}</p>
+                                <div class="form-group">
+                                    <textarea class="form-control" name="" id="edit-post" rows="3"></textarea>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm" id="like">Like</button>
+                                {% if post.user == user %}
+                                    <button type="button" class="edit btn btn-primary btn-sm" id="edit">Edit</button>
+                                {% endif %}
+                                <button type="button" class="btn btn-primary btn-sm" id="save">Save</button>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
 
 
@@ -52,4 +63,8 @@
             <div>You're currently not loggeed in. <a href="{% url 'login' %}">Login</a></div>
         {% endif %}
     </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'network/edit.js' %}"></script>
+    <script src="{% static 'network/like.js' %}"></script>
 {% endblock %}

@@ -1,8 +1,10 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from django.core.paginator import Paginator
 
@@ -19,7 +21,7 @@ def index(request):
             instance = f.save(commit=False)
             instance.user = request.user
             instance.save()
-        return(HttpResponseRedirect(reverse("index")))
+        return HttpResponseRedirect(reverse("index"))
     else:
         all_posts = NewPost.objects.order_by("-date")
         f = NewPostForm()
@@ -145,3 +147,13 @@ def following(request):
     return render(request, "network/following.html", {
         "posts": p
     })
+
+@csrf_exempt
+def savepost(request, id):
+    post = NewPost.objects.get(id=id, user=request.user)
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        post.post_text = data["post_text"]
+        post.save()
+        return HttpResponse(status=204)
+        

@@ -5,9 +5,10 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("savepost/<int:id>/", views.savepost, name="savepost"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register, name="register"),
     path("following/", views.following, name="following"),
-    path("<str:profile_username>/", views.profile, name="profile")
+    path("profile/<str:profile_username>/", views.profile, name="profile")
 ]

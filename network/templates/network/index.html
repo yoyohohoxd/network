@@ -1,5 +1,6 @@
 {% extends "network/layout.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block body %}
     <div class="container">
@@ -14,14 +15,18 @@
         <div class="container">
             {% for post in page_obj %}
                 <div class="card mx-auto w-75 mb-5" style="width: 18rem;">
-                    <div class="card-body">
+                    <div class="card-body posts" id="post-{{ post.id }}">
                         <h5 class="card-title"><a href="{% url 'profile' post.user %}" class="text-reset text-decoration-none">{{ post.user }}</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ post.date }}</h6>
-                        <p class="card-text border p-2">{{ post.post_text }}</p>
-                        <button type="button" class="btn btn-primary btn-sm">Like</button>
+                        <p class="card-text border p-2" id="post-text">{{ post.post_text }}</p>
+                        <div class="form-group">
+                            <textarea class="form-control" name="" id="edit-post" rows="3"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" id="like">Like</button>
                         {% if post.user == user %}
-                            <button type="button" class="btn btn-primary btn-sm" id="edit">Edit</button>
+                            <button type="button" class="edit btn btn-primary btn-sm" id="edit">Edit</button>
                         {% endif %}
+                        <button type="button" class="btn btn-primary btn-sm" id="save">Save</button>
                     </div>
                 </div>
             {% endfor %}
@@ -58,4 +63,9 @@
 
     {% endif %}
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/edit.js' %}"></script>
+    <script src="{% static 'network/like.js' %}"></script>
 {% endblock %}
