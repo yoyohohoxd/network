@@ -26,16 +26,7 @@ def index(request):
         all_posts = NewPost.objects.order_by("-date")
         f = NewPostForm()
 
-        liked = []
         profile = Profile.objects.get(id=request.user.id)
-
-        for post in all_posts:
-            if profile.likes.filter(id=post.id).exists():
-                liked.append(True)
-            else:
-                liked.append(False)
-
-        print(liked)
 
         # Paginator
         paginator = Paginator(all_posts, 10)
@@ -46,8 +37,7 @@ def index(request):
             "NewPostForm": f,
             "page_obj": page_obj,
             "num_pages": range(paginator.num_pages),
-            "liked_array": liked,
-            "all_posts": all_posts
+            "profile": profile
         })
 
 
@@ -172,36 +162,13 @@ def savepost(request, id):
 
 @csrf_exempt
 def likepost(request, id):
-    print('likepost_func')
     post = NewPost.objects.get(id=id)
     user = request.user
     profile = Profile.objects.get(id=user.id)
-    if request.method == 'GET':
-        if profile.likes.filter(id=post.id).exists():
-            return JsonResponse({"liked": False}, status=201)
-        else:
-            return JsonResponse({"liked": True}, status=201)
     if request.method == 'POST':
         if profile.likes.filter(id=post.id).exists():
-            print('removing like')
             post.liked_by.remove(profile)
             return JsonResponse({"liked": False}, status=201)
         else:
-            print('adding like')
             post.liked_by.add(profile)
-            return JsonResponse({"liked": True}, status=201)
-
-
-def load_state(request, id):
-    """
-    Loads whether or not a post has been liked by the currently logged in user
-    """
-    print("load_state")
-    post = NewPost.objects.get(id=id)
-    user = request.user
-    profile = Profile.objects.get(id=user.id)
-    if request.method == 'GET':
-        if profile.likes.filter(id=post.id).exists():
-            return JsonResponse({"liked": False}, status=201)
-        else:
             return JsonResponse({"liked": True}, status=201)

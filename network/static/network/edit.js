@@ -9,16 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
             like(post);
         })
 
-        /*const postID = post.id.slice(5);
-
-        fetch(`likepost/${postID}/`, {
-            method: 'GET'
-        })
-        .then(response => response.json())
-        .then(data => {
-            post.querySelector('#like').innerHTML = data.liked ? 'Like' : 'Unlike';
-        });*/
-
         // If edit button exists, addEventListener for both Edit and Save button
         const editButton = post.querySelector('#edit');
         if (editButton) {
@@ -42,6 +32,9 @@ function edit(post) {
     const editTextarea = post.querySelector('#edit-post');
     editTextarea.style.display  = 'inline-block';
 
+    document.querySelectorAll('button').disabled = true;
+    post.querySelector('#save').disabled = false;
+
     // Show textarea and populate with text from the old post
     const oldPost = post.querySelector('#post-text');
     oldPost.style.display = 'none';
@@ -62,6 +55,9 @@ function save(post) {
     const newPost = post.querySelector('#post-text');
     newPost.style.display = 'block';
     newPost.innerHTML = editTextarea.value;
+
+    document.querySelectorAll('button').disabled = false;
+
 
     // Put new text in database
     fetch(`savepost/${postID}/`, {
