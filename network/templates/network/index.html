@@ -12,6 +12,11 @@
                 <input type="submit" value="Post" class="btn btn-primary mb-2">
             </div>
         </form>
+        {% for post in page_obj %}
+            {% for profile in post.liked_by.all %}
+                {{ profile.user }}
+            {% endfor %}
+        {% endfor %}
         <div class="container">
             {% for post in page_obj %}
                 <div class="card mx-auto w-75 mb-5" style="width: 18rem;">
@@ -22,7 +27,13 @@
                         <div class="form-group">
                             <textarea class="form-control" name="" id="edit-post" rows="3"></textarea>
                         </div>
-                        <button type="button" class="btn btn-primary btn-sm" id="like">Like</button>
+                        {% if profile.id in post.liked_by.all %}
+                            <h1>ALREADY LIKING</h1>
+                            <button type="button" class="btn btn-primary btn-sm" id="like">Unlike</button>
+                        {% else %}
+                            <button type="button" class="btn btn-primary btn-sm" id="like">Like</button>
+                        {% endif %}
+                        
                         {% if post.user == user %}
                             <button type="button" class="edit btn btn-primary btn-sm" id="edit">Edit</button>
                         {% endif %}

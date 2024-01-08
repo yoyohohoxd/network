@@ -9,6 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
             like(post);
         })
 
+        /*const postID = post.id.slice(5);
+
+        fetch(`likepost/${postID}/`, {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            post.querySelector('#like').innerHTML = data.liked ? 'Like' : 'Unlike';
+        });*/
+
         // If edit button exists, addEventListener for both Edit and Save button
         const editButton = post.querySelector('#edit');
         if (editButton) {
@@ -67,10 +77,13 @@ function like(post) {
     // Get ID from post to fetch operation
     const postID = post.id.slice(5);
 
-    likeButton = post.querySelector('#edit');
+    likeButton = post.querySelector('#like');
 
     fetch(`likepost/${postID}/`, {
         method: 'POST'
-        // have to send stuff back like amount of likes and whether or not it is liked at all
     })
+    .then(response => response.json())
+    .then(data => {
+        likeButton.innerHTML = data.liked ? 'Unlike' : 'Like';
+    });
 }
